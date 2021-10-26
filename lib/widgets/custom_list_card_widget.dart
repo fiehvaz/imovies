@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:imovies/models/movies_model.dart';
+import 'package:imovies/pages/details_page.dart';
 import 'package:imovies/utils/apis.utils.dart';
 
 class CustomListCardWidget extends StatelessWidget {
@@ -9,49 +10,63 @@ class CustomListCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 200,
-      decoration: BoxDecoration(
-        color: Colors.black54,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(15),
-              bottomLeft: Radius.circular(15),
-            ),
-            child: Image.network(
-              API.REQUEST_IMG(movie.posterPath),
-              loadingBuilder: (_, child, progress) {
-                if (progress == null) return child;
-                return CircularProgressIndicator.adaptive();
-              },
-            ),
+    return Material(
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => DetailsPage(movie: movie),
+                  fullscreenDialog: true));
+        },
+        child: Container(
+          height: 200,
+          decoration: BoxDecoration(
+            color: Colors.black54,
+            borderRadius: BorderRadius.circular(15),
           ),
-          Expanded(
-              child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  movie.title,
-                  style: Theme.of(context).textTheme.headline6,
-                  softWrap: true,
-                  overflow: TextOverflow.visible,
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                  bottomLeft: Radius.circular(15),
                 ),
-                Spacer(),
-                Text("Popularidade: " + movie.popularity.toString()),
-                const SizedBox(
-                  height: 10,
+                child: Hero(
+                  tag: movie.id,
+                  child: Image.network(
+                    API.REQUEST_IMG(movie.posterPath),
+                    loadingBuilder: (_, child, progress) {
+                      if (progress == null) return child;
+                      return CircularProgressIndicator.adaptive();
+                    },
+                  ),
                 ),
-                Text("Avaliação: " + movie.voteAverage.toString()),
-              ],
-            ),
-          ))
-        ],
+              ),
+              Expanded(
+                  child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      movie.title,
+                      style: Theme.of(context).textTheme.headline6,
+                      softWrap: true,
+                      overflow: TextOverflow.visible,
+                    ),
+                    Spacer(),
+                    Text("Popularidade: " + movie.popularity.toString()),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text("Avaliação: " + movie.voteAverage.toString()),
+                  ],
+                ),
+              ))
+            ],
+          ),
+        ),
       ),
     );
   }
