@@ -6,6 +6,7 @@ import 'package:imovies/repositories/movies_repository_imp.dart';
 import 'package:imovies/services/dio_service_imp.dart';
 import 'package:imovies/utils/apis.utils.dart';
 import 'package:imovies/widgets/custom_list_card_widget.dart';
+import 'package:lottie/lottie.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -31,10 +32,17 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 40),
-              Text(
-                "Movies",
-                style: Theme.of(context).textTheme.headline3,
-              ),
+              ValueListenableBuilder<Movies?>(
+                  valueListenable: _controller.movies,
+                  builder: (__, movies, _) {
+                    return Visibility(
+                      visible: movies != null,
+                      child: Text(
+                        "Movies",
+                        style: Theme.of(context).textTheme.headline3,
+                      ),
+                    );
+                  }),
               ValueListenableBuilder<Movies?>(
                 valueListenable: _controller.movies,
                 builder: (_, movies, __) {
@@ -48,7 +56,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           separatorBuilder: (_, __) => Divider(),
                         )
-                      : Container();
+                      : Lottie.asset("assets/lottie.json");
                 },
               ),
             ],
